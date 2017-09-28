@@ -1,0 +1,55 @@
+/*****************************/
+/* C Programming Deep Dive #1*/
+/* Dominic Harshaw           */
+/* Keishon Smith             */
+/* FALL 2017                 */
+/* PROBLEM #A                */
+/*****************************/
+#include <msp430.h> 
+#include <stdio.h>
+#include <stdint.h>
+#define GroupNum 0x48
+
+extern void init_mydata(void);
+extern uint8_t myData(uint8_t);
+
+
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop timer
+
+    volatile uint16_t vmax, vmin, vmed, vCount, vSum, vavg, result;
+    int sortie[500];
+
+    init_myData();
+    vCount = 0;
+    vSum = 0;
+
+    do
+    {
+        result = myData(GroupNum);
+        vSum += result;
+        sortie[vCount]=result;
+        vCount++;
+    }while(vCount!=0);
+
+
+    vmax=sortie[vCount];
+    vmin=sortie[0];
+    vmed=sortie[vCount/2];
+    vavg=vSum/vCount;
+
+
+
+    printf("Count = %d\n",vCount);
+    printf("Sum = %d\n", vSum);
+    printf("Max = %d\n", vmax);
+    printf("Min = %d\n", vmin);
+    printf("Med = %d\n", vmed);
+    printf("Avg = %d\n", vavg);
+
+
+
+    return 0;
+}
