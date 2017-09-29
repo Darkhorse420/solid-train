@@ -19,20 +19,38 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;   // stop timer
 
-    volatile uint16_t vmax, vmin, vmed, vCount, vSum, vavg, result;
-    int sortie[500];
+    volatile uint16_t vmax, vmin, vmed, vCount, vSum, vavg, result, temp;
+    volatile int swap, k;
+    int sortie[256];
 
     init_myData();
     vCount = 0;
     vSum = 0;
 
-    do
-    {
-        result = myData(GroupNum);
+    result=myData(GroupNum);
+        while(result!=0x00)
+        {
         vSum += result;
         sortie[vCount]=result;
         vCount++;
-    }while(vCount!=0);
+        result = myData(GroupNum);
+        }
+
+        do
+        {   swap=0;
+            for(k=0;k<vCount;k++)
+            {
+                if(sortie[k]>sortie[k+1])
+                {
+                    temp=sortie[k];
+                    sortie[k]=sortie[k+1];
+                    sortie[k+1]=temp;
+                    swap=1;
+                }
+            }
+
+
+        }while(swap);
 
 
     vmax=sortie[vCount];
@@ -41,13 +59,12 @@ int main(void)
     vavg=vSum/vCount;
 
 
-
-    printf("Count = %d\n",vCount);
-    printf("Sum = %d\n", vSum);
-    printf("Max = %d\n", vmax);
-    printf("Min = %d\n", vmin);
-    printf("Med = %d\n", vmed);
-    printf("Avg = %d\n", vavg);
+    printf("Dominic Harshaw\nFall 2017\nM4-- Problem #A\n");
+    printf("------------------------\n");
+    printf("vMax = %d\n", vmax);
+    printf("vMin = %d\n", vmin);
+    printf("vMed = %d\n", vmed);
+    printf("vAvg = %d\n", vavg);
 
 
 
